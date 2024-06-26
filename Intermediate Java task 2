@@ -1,0 +1,60 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class MedicalManagementSystem {
+    private List<Patient> patients;
+    private List<Doctor> doctors;
+    private List<Appointment> appointments;
+
+    public MedicalManagementSystem() {
+        this.patients = new ArrayList<>();
+        this.doctors = new ArrayList<>();
+        this.appointments = new ArrayList<>();
+    }
+
+    public void addPatient(Patient patient) {
+        patients.add(patient);
+    }
+
+    public void addDoctor(Doctor doctor) {
+        doctors.add(doctor);
+    }
+
+    public void addAppointment(Appointment appointment) {
+        appointments.add(appointment);
+    }
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public List<Doctor> getDoctors() {
+        return doctors;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public static void main(String[] args) {
+        MedicalManagementSystem system = new MedicalManagementSystem();
+
+        // Example usage
+        Patient patient1 = new Patient("P1", "John Doe", "john.doe@example.com", "No allergies");
+        Doctor doctor1 = new Doctor("D1", "Dr. Smith", "dr.smith@example.com", "Cardiology");
+
+        system.addPatient(patient1);
+        system.addDoctor(doctor1);
+
+        Appointment appointment1 = new Appointment("A1", patient1, doctor1, new Date());
+        system.addAppointment(appointment1);
+
+        // Display all appointments
+        for (Appointment app : system.getAppointments()) {
+            System.out.println("Appointment ID: " + app.getAppointmentId());
+            System.out.println("Patient: " + app.getPatient().getName());
+            System.out.println("Doctor: " + app.getDoctor().getName());
+            System.out.println("Date: " + app.getDate());
+        }
+    }
+}
