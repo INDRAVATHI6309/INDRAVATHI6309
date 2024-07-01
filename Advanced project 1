@@ -1,0 +1,180 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Define a Flight class
+class Flight {
+    private String flightNumber;
+    private String origin;
+    private String destination;
+    private int capacity;
+    private int bookedSeats;
+
+    // Constructor
+    public Flight(String flightNumber, String origin, String destination, int capacity) {
+        this.flightNumber = flightNumber;
+        this.origin = origin;
+        this.destination = destination;
+        this.capacity = capacity;
+        this.bookedSeats = 0;
+    }
+
+    // Getters
+    public String getFlightNumber() {
+        return flightNumber;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getBookedSeats() {
+        return bookedSeats;
+    }
+
+    // Method to book a seat
+    public boolean bookSeat() {
+        if (bookedSeats < capacity) {
+            bookedSeats++;
+            return true;
+        } else {
+            return false; // No more seats available
+        }
+    }
+}
+
+// Define a Passenger class
+class Passenger {
+    private String name;
+
+    // Constructor
+    public Passenger(String name) {
+        this.name = name;
+    }
+
+    // Getter
+    public String getName() {
+        return name;
+    }
+}
+
+// Define a Reservation class
+class Reservation {
+    private Passenger passenger;
+    private Flight flight;
+
+    // Constructor
+    public Reservation(Passenger passenger, Flight flight) {
+        this.passenger = passenger;
+        this.flight = flight;
+    }
+
+    // Getter
+    public Passenger getPassenger() {
+        return passenger;
+    }
+
+    public Flight getFlight() {
+        return flight;
+    }
+}
+
+// Define an AirlineReservationSystem class
+public class AirlineReservationSystem {
+    private List<Flight> flights;
+    private List<Reservation> reservations;
+
+    // Constructor
+    public AirlineReservationSystem() {
+        this.flights = new ArrayList<>();
+        this.reservations = new ArrayList<>();
+    }
+
+    // Method to add a flight to the system
+    public void addFlight(Flight flight) {
+        flights.add(flight);
+    }
+
+    // Method to make a reservation
+    public boolean makeReservation(Passenger passenger, Flight flight) {
+        if (flight.bookSeat()) {
+            Reservation reservation = new Reservation(passenger, flight);
+            reservations.add(reservation);
+            return true;
+        } else {
+            return false; // Booking failed, no more seats available
+        }
+    }
+
+    // Method to display all flights
+    public void displayFlights() {
+        System.out.println("Available Flights:");
+        for (Flight flight : flights) {
+            System.out.println("Flight Number: " + flight.getFlightNumber() +
+                               ", Origin: " + flight.getOrigin() +
+                               ", Destination: " + flight.getDestination() +
+                               ", Available Seats: " + (flight.getCapacity() - flight.getBookedSeats()));
+        }
+    }
+
+    // Main method to run the program
+    public static void main(String[] args) {
+        AirlineReservationSystem system = new AirlineReservationSystem();
+        Flight flight1 = new Flight("F001", "New York", "Los Angeles", 150);
+        Flight flight2 = new Flight("F002", "Chicago", "Miami", 200);
+        system.addFlight(flight1);
+        system.addFlight(flight2);
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to Airline Reservation System");
+        while (true) {
+            System.out.println("1. Display Available Flights");
+            System.out.println("2. Make a Reservation");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    system.displayFlights();
+                    break;
+                case 2:
+                    System.out.print("Enter passenger name: ");
+                    String passengerName = scanner.next();
+                    Passenger passenger = new Passenger(passengerName);
+                    System.out.print("Enter flight number: ");
+                    String flightNumber = scanner.next();
+                    Flight selectedFlight = null;
+                    for (Flight flight : system.flights) {
+                        if (flight.getFlightNumber().equals(flightNumber)) {
+                            selectedFlight = flight;
+                            break;
+                        }
+                    }
+                    if (selectedFlight != null) {
+                        if (system.makeReservation(passenger, selectedFlight)) {
+                            System.out.println("Reservation successful!");
+                        } else {
+                            System.out.println("Sorry, no seats available on this flight.");
+                        }
+                    } else {
+                        System.out.println("Flight not found.");
+                    }
+                    break;
+                case 3:
+                    System.out.println("Exiting program...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        }
+    }
+}
